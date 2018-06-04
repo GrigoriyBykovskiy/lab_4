@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "malloc.h"
+#include "locale.h"
 char *read_string(FILE *name) {
 	char *tmp, *R = NULL;
 	char ch;
@@ -62,7 +63,7 @@ int format_l(char *name, char *widht) {
 			}
 			if (feof(input)) break;
 		}
-		if (str = NULL) return NULL;
+		if (str == NULL) return NULL;
 		return 1;
 	}
 	else printf("Error. Can not open the FILE!\n");
@@ -81,10 +82,12 @@ int format_C(char  *name, char  *widht) {
 }
 int main(int argc, char **argv)
 {
+	setlocale(LC_ALL, "Russian");
 	if (argc != 4) printf("Error! Only 3 parameters are required!");// 1 - path to programm
 	else {
 		char *err = "Not Avaliable. Mod is under construction\0";
 		char *keys[5] = { "l","k","c","w","C" };
+		bool is_format = false;
 		int(*print_text)(char *arg1, char *arg2);
 		for (int i = 0; i < 5; i++) {
 			if (strcmp(keys[i], argv[2]) == 0) {
@@ -92,22 +95,27 @@ int main(int argc, char **argv)
 					switch (i)
 					{
 					case 0:
+						is_format = true;
 						print_text = format_l;
 						if (print_text(argv[1], argv[3]) == NULL) printf("Problem with FILE or low of memory!");
 						break;
 					case 1:
+						is_format = true;
 						print_text = format_k;
 						if ((print_text(argv[1], argv[3]) != 1)) printf("%s\n", err);
 						break;
 					case 2:
+						is_format = true;
 						print_text = format_c;
 						if ((print_text(argv[1], argv[3]) != 1)) printf("%s\n", err);
 						break;
 					case 3:
+						is_format = true;
 						print_text = format_w;
 						if ((print_text(argv[1], argv[3])) != 1) printf("%s\n", err);
 						break;
 					case 4:
+						is_format = true;
 						print_text = format_C;
 						if ((print_text(argv[1], argv[3])) != 1) printf("%s\n", err);
 						break;
@@ -118,6 +126,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}
+		if (is_format == false) printf("Wrong parameter of format!\n");
 	}
 	return 0;
 }
